@@ -3,15 +3,22 @@
 ## Prerequisites:
 - Install required packages and Rust as per https://docs.substrate.io/install/
 - Install Foundry as per https://getfoundry.sh/
-- Build Polkadot binary, Moonbeam (collator) binary, Tellor contracts using build script:
+- Build Polkadot relay chain and Statemine, Moonbeam and oracle consumer parachain binaries using build script:
   ```
   ./scripts/build.sh
   ```
-- Launch local network (`rococo-local` with `moonbase-local`) using launch script:
+## Launch Network
+- Launch local network (`rococo-local`, `statemine-local`, `moonbase-local` and consumer parachain with Tellor pallet) using launch script:
   ```
   ./scripts/launch.sh
   ``` 
 - Create xcTRB asset (Developer, sudo, assets, forceCreate)
+
+## Deploy Contracts
+- In a new terminal shell, deploy the Tellor contracts to Moonbeam:
+  ```
+  ./scripts/deploy.sh
+  ``` 
 
 # Tellor Contracts
 - Uses External XC-20 token (xcTRB), which is a ERC-20 style interface to a Substrate asset.

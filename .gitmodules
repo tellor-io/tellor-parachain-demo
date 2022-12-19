@@ -1,0 +1,10 @@
+[submodule "polkadot"]
+	path = polkadot
+	url = https://github.com/paritytech/polkadot
+	branch = release-v0.9.32
+[submodule "moonbeam"]
+	path = moonbeam
+	url = https://github.com/PureStake/moonbeam
+[submodule "tellor-contracts"]
+	path = tellor-contracts
+	url = https://github.com/evilrobot-01/tellor-contracts

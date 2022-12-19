@@ -20,8 +20,3 @@ echo Building consumer parachain...
 cd substrate-parachain-node || exit
 cargo build --release
 cd ..
-
-echo Building Tellor contracts...
-cd tellor-contracts || exit
-forge build
-cd ..

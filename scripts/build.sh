@@ -9,6 +9,11 @@ git checkout runtime-2000
 cargo build --release
 cd ..
 
+echo Building consumer parachain...
+cd substrate-parachain-node
+cargo build --release
+cd ..
+
 echo Building Tellor contracts...
 cd tellor-contracts
 forge build

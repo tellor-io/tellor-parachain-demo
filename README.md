@@ -2,24 +2,14 @@
 
 ## Prerequisites:
 - Install required packages and Rust as per https://docs.substrate.io/install/
-- Compile Polkadot binary (relay-chain):
+- Install Foundry as per https://getfoundry.sh/
+- Build Polkadot binary, Moonbeam (collator) binary, Tellor contracts using build script:
   ```
-  cd polkadot
-  cargo build --release
-  cd ..
-  ``` 
-- Compile Moonbeam (parachain) collator binary:
+  ./scripts/build.sh
   ```
-  cd moonbeam
-  git checkout runtime-2000
-  cargo build --release
-  cd ..
-  ``` 
-- Launch local network (`rococo-local` with `moonbase-local`)
+- Launch local network (`rococo-local` with `moonbase-local`) using launch script:
   ```
-  cd moonbeam/tools
-  npm install
-  npm run launch -- --relay local
+  ./scripts/launch.sh
   ``` 
 - Create xcTRB asset (Developer, sudo, assets, forceCreate)
 

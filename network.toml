@@ -7,58 +7,72 @@ chain = "rococo-local"
 default_command = "./polkadot/target/release/polkadot"
 default_args = [ "-lparachain=debug" ]
 
-[[relaychain.nodes]]
-name = "alice"
-validator = true
-ws_port = 9900
-extra_args = [ ]
+    [[relaychain.nodes]]
+    name = "alice"
+    ws_port = 9900
 
-[[relaychain.nodes]]
-name = "bob"
-validator = true
-extra_args = [ ]
+    [[relaychain.nodes]]
+    name = "bob"
 
-[[relaychain.nodes]]
-name = "charlie"
-validator = true
-extra_args = [ "-lparachain=debug" ]
+    [[relaychain.nodes]]
+    name = "charlie"
 
-# Moonbeam parachain, using `moonbase-local`
 [[parachains]]
 id = 1000
 add_to_genesis = true
 cumulus_based = true
-chain = "moonbase-local"
+chain = "statemine-local"
 
-[[parachains.collators]]
-name = "alith"
-command = "./moonbeam/target/release/moonbeam"
-ws_port = 9910
-args = ["--log=xcm=trace"]
+    [[parachains.collators]]
+    name = "statemine-collator01"
+    command = "./cumulus/target/release/polkadot-parachain"
+    ws_port = 9910
+    args = ["--log=xcm=trace"]
 
-[[parachains.collators]]
-name = "baltathar"
-command = "./moonbeam/target/release/moonbeam"
-ws_port = 9911
-args = ["--log=xcm=trace"]
+    [[parachains.collators]]
+    name = "statemine-collator02"
+    command = "./cumulus/target/release/polkadot-parachain"
+    ws_port = 9911
+    args = ["--log=xcm=trace"]
 
-# Consumer parachain, parachain-template-node with Tellor pallet
+# Moonbeam parachain, using `moonbase-local`
 [[parachains]]
 id = 2000
 add_to_genesis = true
 cumulus_based = true
+chain = "moonbase-local"
 
-[[parachains.collators]]
-name = "parachain-collator01"
-command = "./substrate-parachain-node/target/release/parachain-template-node"
-ws_port = 9920
-args = ["--log=xcm=trace,pallet-assets=trace"]
+    [[parachains.collators]]
+    name = "alith"
+    command = "./moonbeam/target/release/moonbeam"
+    ws_port = 9920
+    args = ["--log=xcm=trace"]
 
-[[parachains.collators]]
-name = "parachain-collator02"
-command = "./substrate-parachain-node/target/release/parachain-template-node"
-ws_port = 9921
-args = ["--log=xcm=trace,pallet-assets=trace"]
+    [[parachains.collators]]
+    name = "baltathar"
+    command = "./moonbeam/target/release/moonbeam"
+    ws_port = 9921
+    args = ["--log=xcm=trace"]
+
+# Consumer parachain, parachain-template-node with Tellor pallet
+[[parachains]]
+id = 3000
+add_to_genesis = true
+cumulus_based = true
+
+    [[parachains.collators]]
+    name = "parachain-collator01"
+    command = "./substrate-parachain-node/target/release/parachain-template-node"
+    ws_port = 9930
+    rpc_port = 9931
+    args = ["--log=xcm=trace"]
+
+    [[parachains.collators]]
+    name = "parachain-collator02"
+    command = "./substrate-parachain-node/target/release/parachain-template-node"
+    ws_port = 9932
+    rpc_port = 9933
+    args = ["--log=xcm=trace"]
 
 [types.Header]
 number = "u64"
@@ -75,5 +89,29 @@ max_message_size = 512
 [[hrmp_channels]]
 sender = 2000
 recipient = 1000
+max_capacity = 8
+max_message_size = 512
+
+[[hrmp_channels]]
+sender = 1000
+recipient = 3000
+max_capacity = 8
+max_message_size = 512
+
+[[hrmp_channels]]
+sender = 3000
+recipient = 1000
+max_capacity = 8
+max_message_size = 512
+
+[[hrmp_channels]]
+sender = 2000
+recipient = 3000
+max_capacity = 8
+max_message_size = 512
+
+[[hrmp_channels]]
+sender = 3000
+recipient = 2000
 max_capacity = 8
 max_message_size = 512

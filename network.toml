@@ -1,0 +1,79 @@
+[settings]
+timeout = 1000
+
+# Relay chain, using `rococo-local`
+[relaychain]
+chain = "rococo-local"
+default_command = "./polkadot/target/release/polkadot"
+default_args = [ "-lparachain=debug" ]
+
+[[relaychain.nodes]]
+name = "alice"
+validator = true
+ws_port = 9900
+extra_args = [ ]
+
+[[relaychain.nodes]]
+name = "bob"
+validator = true
+extra_args = [ ]
+
+[[relaychain.nodes]]
+name = "charlie"
+validator = true
+extra_args = [ "-lparachain=debug" ]
+
+# Moonbeam parachain, using `moonbase-local`
+[[parachains]]
+id = 1000
+add_to_genesis = true
+cumulus_based = true
+chain = "moonbase-local"
+
+[[parachains.collators]]
+name = "alith"
+command = "./moonbeam/target/release/moonbeam"
+ws_port = 9910
+args = ["--log=xcm=trace"]
+
+[[parachains.collators]]
+name = "baltathar"
+command = "./moonbeam/target/release/moonbeam"
+ws_port = 9911
+args = ["--log=xcm=trace"]
+
+# Consumer parachain, parachain-template-node with Tellor pallet
+[[parachains]]
+id = 2000
+add_to_genesis = true
+cumulus_based = true
+
+[[parachains.collators]]
+name = "parachain-collator01"
+command = "./substrate-parachain-node/target/release/parachain-template-node"
+ws_port = 9920
+args = ["--log=xcm=trace,pallet-assets=trace"]
+
+[[parachains.collators]]
+name = "parachain-collator02"
+command = "./substrate-parachain-node/target/release/parachain-template-node"
+ws_port = 9921
+args = ["--log=xcm=trace,pallet-assets=trace"]
+
+[types.Header]
+number = "u64"
+parent_hash = "Hash"
+post_state = "Hash"
+
+# Configure HRMP channels between parachains
+[[hrmp_channels]]
+sender = 1000
+recipient = 2000
+max_capacity = 8
+max_message_size = 512
+
+[[hrmp_channels]]
+sender = 2000
+recipient = 1000
+max_capacity = 8
+max_message_size = 512

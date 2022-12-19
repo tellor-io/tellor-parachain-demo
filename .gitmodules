@@ -12,3 +12,7 @@
 	path = substrate-parachain-node
 	url = https://github.com/evilrobot-01/substrate-parachain-node
 	branch = tellor
+[submodule "cumulus"]
+	path = cumulus
+	url = https://github.com/paritytech/cumulus
+	branch = polkadot-v0.9.32

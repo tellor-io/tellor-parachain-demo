@@ -1,23 +1,28 @@
 #!/bin/bash
 
-ZOMBIENET_VERSION=v1.3.23
+PIT=parachains-integration-tests
+PIT_PACKAGE=@parity/$PIT
 
-# Check if zombienet needs to be downloaded
-if [ ! -e zombienet ]; then
-  case $(uname) in
-    "Darwin") ARCHITECTURE=macos;;
-    "Linux")
-    {
-      # todo: test on linux
-      ARCHITECTURE=linux
-      if $(uname -m) = x86_64; then ARCHITECTURE=$ARCHITECTURE-x64; else ARCHITECTURE=$ARCHITECTURE-arm64; fi
-    } ;;
-    esac
-
-  echo Downloading zombienet $ZOMBIENET_VERSION...
-  curl -s -L https://github.com/paritytech/zombienet/releases/download/$ZOMBIENET_VERSION/zombienet-$ARCHITECTURE > zombienet
-  chmod +x zombienet
+# Ensure yarn available
+if ! which yarn &> /dev/null
+then
+echo Error: could not find yarn
+exit
 fi
 
+# Install parachains-integration-tests
+if ! which $PIT &> /dev/null
+then
+echo Installing parachain integration framework...
+yarn global add --silent  --no-progress $PIT_PACKAGE
+echo Use \'yarn global remove "$PIT_PACKAGE"\' to remove...
+  if ! which $PIT &> /dev/null
+  then
+    echo Error: could not find \'"$PIT"\' after global install - ensure that the path reported by \'yarn global bin\' is in your PATH.
+    exit
+  fi
+fi
+
+# Launch network and initialise
 echo Launching network...
-./zombienet spawn -p native network.toml
+parachains-integration-tests -m zombienet-test -c network-config.toml -t network-init.yaml

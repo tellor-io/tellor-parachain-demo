@@ -1,0 +1,84 @@
+---
+settings:
+  chains:
+    relay_chain:
+      wsPort: 9900
+    evm_chain: &evm_parachain
+      paraId: 2000
+      wsPort: 9920
+    oracle_consumer_parachain: &consumer_parachain
+      paraId: &ocp_id 3000
+      wsPort: 9930
+
+  variables:
+    chains:
+      evm_chain:
+        signer: &alith_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"
+  decodedCalls:
+    report:
+      chain: *consumer_parachain
+      pallet: tellor
+      call: report
+      args: []
+
+tests:
+  - name: Initialize Chains
+    its:
+      - name: Initialise EVM chain
+        actions:
+          - extrinsics:
+              # Register foreign asset
+              - chain: *evm_parachain
+                sudo: true
+                signer: *alith_signer
+                keyPairType: ethereum
+                pallet: assetManager
+                call: registerForeignAsset
+                args: [
+                  # asset
+                  { xcm: {  parents: 1, interior: { x1: { Parachain: *ocp_id } } } },
+                  # metadata
+                  {
+                    name: "Oracle Consumer Parachain",
+                    symbol: "xcOCP",
+                    decimals: 18,
+                    isFrozen: false
+                  },
+                  1000, # minAmount
+                  false, # isSufficient
+                ]
+      - name: Report new stake to Oracle Consumer Parachain
+        actions:
+          - extrinsics:
+              # Transact through Signed: report to Tellor pallet on Oracle Consumer Parachain
+              - chain: *evm_parachain
+                signer: *alith_signer
+                keyPairType: ethereum
+                pallet: xcmTransactor
+                call: transactThroughSigned
+                args: [
+                  # dest
+                  { v1: { parents: 1, interior: { x1: { Parachain: *ocp_id } } } },
+                  # fee
+                  {
+                    currency: { asMultiLocation: { v1: { parents: 1, interior: { x1: { Parachain: *ocp_id } } } } },
+                    feeAmount: "50000000000000000"
+                  },
+                  $report, # call
+                  # weightInfo
+                  {
+                    transactRequiredWeightAtMost: 1000000000,
+                    overallWeight: 2000000000
+                  }
+                ]
+              # Register account as a derivative account on evm chain - allowing it to remotely transact
+              #              - chain: *evm_chain
+              #                sudo: true
+              #                signer: *alith_signer
+              #                pallet: xcmTransactor
+              #                call: register
+              #                args: [
+              #                  *xcm_transactor_address,
+              #                  *xcm_transactor_derivative_index
+              #                ]
+              # todo: create derivative asset on evm chain

@@ -40,6 +40,7 @@ chain = "moonbase-local"
     name = "alith"
     command = "./moonbeam/target/release/moonbeam"
     ws_port = 9920
+    rpc_port = 9921
     args = ["--log=xcm=trace"]
 
 # Consumer parachain, parachain-template-node with Tellor pallet
@@ -52,7 +53,6 @@ cumulus_based = true
     name = "parachain-collator01"
     command = "./substrate-parachain-node/target/release/parachain-template-node"
     ws_port = 9930
-    rpc_port = 9931
     args = ["--log=xcm=trace"]
 
 [types.Header]

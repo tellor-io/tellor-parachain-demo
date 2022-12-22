@@ -25,4 +25,4 @@ fi
 
 # Launch network and initialise
 echo Launching network...
-parachains-integration-tests -m zombienet-test -c network-config.toml -t network-init.yaml
+parachains-integration-tests -m zombienet-test -c network-config.toml -t network-init.yaml --action-delay 0

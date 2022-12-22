@@ -3,7 +3,10 @@ settings:
   chains:
     relay_chain:
       wsPort: 9900
-    evm_chain: &evm_parachain
+    asset_reserve_parachain: &arp
+      paraId: &arp_id 1000
+      wsPort: 9910
+    evm_parachain: &evmp
       paraId: 2000
       wsPort: 9920
     oracle_consumer_parachain: &consumer_parachain
@@ -12,8 +15,31 @@ settings:
 
   variables:
     chains:
-      evm_chain:
-        signer: &alith_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"
+      asset_reserve_parachain:
+        signer: &arp_signer //Alice
+      evm_parachain:
+        signer: &evmp_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"
+    tokens:
+      # Tellor Tribute token
+      trb:
+        id: &TRB_id 872
+        symbol: &TRB TRB
+        name: &TRB_name Tellor Tribute
+        owner: &TRB_owner HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F # Alice's account on asset reserve parachain
+        min_balance: &TRB_min_balance 1000000000
+        decimals: &TRB_decimals 12
+      # Derivative of Tellor Tribute token
+      xcTRB:
+        symbol: &xcTRB xcTRB
+        name: &xcTRB_name Tellor Tribute
+        min_balance: &xcTRB_min_balance 1000000000
+        decimals: &xcTRB_decimals 12
+      # Derivative of native Oracle Consumer parachain token
+      xcOCP:
+        symbol: &xcOCP xcOCP
+        name: &xcOCP_name Oracle Consumer Parachain
+        min_balance: &xcOCP_min_balance 1000000000
+        decimals: &xcOCP_decimals 12
   decodedCalls:
     report:
       chain: *consumer_parachain
@@ -24,13 +50,56 @@ settings:
 tests:
   - name: Initialize Chains
     its:
+      - name: Initialise asset reserve chain
+        actions:
+          - extrinsics:
+              # Create TRB token and set metadata
+              - chain: *arp
+                signer: *arp_signer
+                pallet: assets
+                call: create
+                args: [
+                  *TRB_id, # id
+                  { id: *TRB_owner }, # owner
+                  *TRB_min_balance # min balance
+                ]
+              - chain: *arp
+                signer: *arp_signer
+                pallet: assets
+                call: setMetadata
+                args: [
+                  *TRB_id, # id
+                  *TRB_name, # name
+                  *TRB, # symbol
+                  *TRB_decimals # decimals
+                ]
       - name: Initialise EVM chain
         actions:
           - extrinsics:
-              # Register foreign asset
-              - chain: *evm_parachain
+              # Register TRB as foreign asset
+              - chain: *evmp
                 sudo: true
-                signer: *alith_signer
+                signer: *evmp_signer
+                keyPairType: ethereum
+                pallet: assetManager
+                call: registerForeignAsset
+                args: [
+                  # asset
+                  { xcm: { parents: 1, interior: { x3: { Parachain: *arp_id, PalletInstance: 50, GeneralIndex: *TRB_id } } } },
+                  # metadata
+                  {
+                    name: *xcTRB_name,
+                    symbol: *xcTRB,
+                    decimals: *xcTRB_decimals,
+                    isFrozen: false
+                  },
+                  *xcTRB_min_balance, # minAmount
+                  false, # isSufficient
+                ]
+              # Register native token of OCP as foreign asset
+              - chain: *evmp
+                sudo: true
+                signer: *evmp_signer
                 keyPairType: ethereum
                 pallet: assetManager
                 call: registerForeignAsset
@@ -39,20 +108,20 @@ tests:
                   { xcm: {  parents: 1, interior: { x1: { Parachain: *ocp_id } } } },
                   # metadata
                   {
-                    name: "Oracle Consumer Parachain",
-                    symbol: "xcOCP",
-                    decimals: 18,
+                    name: *xcOCP_name,
+                    symbol: *xcOCP,
+                    decimals: *xcOCP_decimals,
                     isFrozen: false
                   },
-                  1000, # minAmount
+                  *xcOCP_min_balance, # minAmount
                   false, # isSufficient
                 ]
       - name: Report new stake to Oracle Consumer Parachain
         actions:
           - extrinsics:
               # Transact through Signed: report to Tellor pallet on Oracle Consumer Parachain
-              - chain: *evm_parachain
-                signer: *alith_signer
+              - chain: *evmp
+                signer: *evmp_signer
                 keyPairType: ethereum
                 pallet: xcmTransactor
                 call: transactThroughSigned

@@ -5,7 +5,7 @@
 - Install Foundry as per https://getfoundry.sh/
 - Install `yarn`
 - Clone this repository, making sure to initialise the submodules: `git clone --recursive https://github.com/evilrobot-01/tellor`
-- Build Polkadot relay chain and Statemine, Moonbeam and oracle consumer parachain binaries using build script:
+- Build `polkadot` (relay chain), `polkadot-parachain` (asset reserve), `moonbeam` and `parachain-template-node` (oracle consumer parachain) binaries using build script:
   ```
   ./scripts/build.sh
   ```

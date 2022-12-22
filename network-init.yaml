@@ -81,4 +81,5 @@ tests:
               #                  *xcm_transactor_address,
               #                  *xcm_transactor_derivative_index
               #                ]
-              # todo: create derivative asset on evm chain
+
+        # todo: Create TRB asset on reserve asset chain, xcTRB derivative asset on evm chain (Developer, sudo, assets, forceCreate)

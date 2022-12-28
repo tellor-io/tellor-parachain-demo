@@ -23,6 +23,6 @@ echo Use \'yarn global remove "$PIT_PACKAGE"\' to remove...
   fi
 fi
 
-# Launch network and initialise
+# Launch network
 echo Launching network...
-parachains-integration-tests -m zombienet-test -c network-config.toml -t network-init.yaml --action-delay 0
+parachains-integration-tests -m zombienet -c network-config.toml

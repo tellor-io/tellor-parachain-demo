@@ -9,7 +9,7 @@ settings:
     evm_parachain: &evmp
       paraId: 2000
       wsPort: 9920
-    oracle_consumer_parachain: &consumer_parachain
+    oracle_consumer_parachain: &ocp
       paraId: &ocp_id 3000
       wsPort: 9930
 
@@ -19,6 +19,11 @@ settings:
         signer: &arp_signer //Alice
       evm_parachain:
         signer: &evmp_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"
+        derivative_accounts:
+          alice_ocp: &evmp_aocpda "0xdb358c94fc50810fa85742cd7257cddd30859641"
+      oracle_consumer_parachain:
+        signer: &ocp_signer //Alice
+        tellor_pallet_account: &ocp_tellor_account 5EYCAe5ijiYfyFR5Zp1cdckhKCKaUyo9KQsTcU1NR9u2mwTk
     tokens:
       # Tellor Tribute token
       trb:
@@ -40,17 +45,11 @@ settings:
         name: &xcOCP_name Oracle Consumer Parachain
         min_balance: &xcOCP_min_balance 1000000000
         decimals: &xcOCP_decimals 12
-  decodedCalls:
-    report:
-      chain: *consumer_parachain
-      pallet: tellor
-      call: report
-      args: []
 
 tests:
   - name: Initialize Chains
     its:
-      - name: Initialise asset reserve chain
+      - name: Initialise asset reserve parachain
         actions:
           - extrinsics:
               # Create TRB token and set metadata
@@ -73,7 +72,7 @@ tests:
                   *TRB, # symbol
                   *TRB_decimals # decimals
                 ]
-      - name: Initialise EVM chain
+      - name: Initialise EVM parachain
         actions:
           - extrinsics:
               # Register TRB as foreign asset
@@ -116,39 +115,26 @@ tests:
                   *xcOCP_min_balance, # minAmount
                   false, # isSufficient
                 ]
-      - name: Report new stake to Oracle Consumer Parachain
-        actions:
-          - extrinsics:
-              # Transact through Signed: report to Tellor pallet on Oracle Consumer Parachain
+              # Fund multi-location derivative account of Alice@OracleConsumerParachain
               - chain: *evmp
                 signer: *evmp_signer
                 keyPairType: ethereum
-                pallet: xcmTransactor
-                call: transactThroughSigned
+                pallet: balances
+                call: transfer
                 args: [
-                  # dest
-                  { v1: { parents: 1, interior: { x1: { Parachain: *ocp_id } } } },
-                  # fee
-                  {
-                    currency: { asMultiLocation: { v1: { parents: 1, interior: { x1: { Parachain: *ocp_id } } } } },
-                    feeAmount: "50000000000000000"
-                  },
-                  $report, # call
-                  # weightInfo
-                  {
-                    transactRequiredWeightAtMost: 1000000000,
-                    overallWeight: 2000000000
-                  }
+                  *evmp_aocpda,
+                  "1000000000000000000"
                 ]
-              # Register account as a derivative account on evm chain - allowing it to remotely transact
-              #              - chain: *evm_chain
-              #                sudo: true
-              #                signer: *alith_signer
-              #                pallet: xcmTransactor
-              #                call: register
-              #                args: [
-              #                  *xcm_transactor_address,
-              #                  *xcm_transactor_derivative_index
-              #                ]
+      - name: Initialise Oracle Consumer parachain
+        actions:
+          - extrinsics:
+              # Fund Tellor pallet for remote xcm fees
+              - chain: *ocp
+                signer: *ocp_signer
+                pallet: balances
+                call: transfer
+                args: [
+                  *ocp_tellor_account,
+                  "100000000000000000"
+                ]
 
-        # todo: Create TRB asset on reserve asset chain, xcTRB derivative asset on evm chain (Developer, sudo, assets, forceCreate)

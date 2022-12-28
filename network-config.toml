@@ -24,7 +24,7 @@ cumulus_based = true
 chain = "statemine-local"
 
     [[parachains.collators]]
-    name = "statemine-collator01"
+    name = "statemine"
     command = "./cumulus/target/release/polkadot-parachain"
     ws_port = 9910
     args = ["--log=xcm=trace"]
@@ -50,7 +50,7 @@ add_to_genesis = true
 cumulus_based = true
 
     [[parachains.collators]]
-    name = "parachain-collator01"
+    name = "oracle-consumer"
     command = "./substrate-parachain-node/target/release/parachain-template-node"
     ws_port = 9930
     args = ["--log=xcm=trace"]

@@ -46,7 +46,7 @@ An example of a multilocation:
 **Note:** 
 - This requires the `Ethereum-XCM` pallet, which is currently only available on Moonbase Alpha and does not offer 
 as many options as the remote execution section above.
-- This will require that a disputer (reporter) on an oracle consumer parachain fund their corresponding derivative account on Moonbeam to pay for Xcm/Transact fees. This should probably be built into the smart contract apis - e.g. staking locks some tokens into derivative account for reporting disputes.
+- This will require that the corresponding multilocation derivative account of the `tellor` pallet account on Moonbeam is funded to pay for ongoing Xcm/Transact fees.
 
 ---
 

@@ -83,13 +83,13 @@ You can then call the contracts using Foundry's `cast`, using the development ad
 #### Register Parachain
 The following command simply registers a parachain into the staking contract:
 ```
-cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 --rpc-url http://localhost:9921/ --legacy 0xc01Ee7f10EA4aF4673cFff62710E1D7792aBa8f3 "register(uint32,uint8,uint256)" 3000 40 100
+cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 --rpc-url http://localhost:9921/ --legacy 0xc01Ee7f10EA4aF4673cFff62710E1D7792aBa8f3 "registerParachain(uint32,uint8,uint256)" 3000 40 100
 ```
 
 #### Deposit Stake
 The following command deposits a new stake into the staking contract for a particular parachain, which should then report the stake to the corresponding oracle consumer parachain:
 ```
-cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 --rpc-url http://localhost:9921/ --legacy 0xc01Ee7f10EA4aF4673cFff62710E1D7792aBa8f3 "depositStake(uint32,uint256)" 3000 100
+cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 "depositStake(uint32,uint256)" 3000 100
 ```
 
 ### Pallet Usage

@@ -8,15 +8,17 @@ PRIVATE_KEY=0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133
 echo Deploying Tellor contract...
 cd tellor-contracts || exit
 # Deploy tellor contract
-TELLOR=`forge create --rpc-url http://localhost:9921 \
-  --private-key $PRIVATE_KEY --legacy src/Tellor.sol:Tellor | grep "^Deployed to: " | tail -c 43 || exit`
+TELLOR=`forge create --rpc-url http://localhost:9921 --private-key $PRIVATE_KEY --legacy src/Tellor.sol:Tellor | grep "^Deployed to: " | tail -c 43`
+if [ -z "$TELLOR" ]
+then
+  echo Error: Contract could not be deployed.
+  exit
+fi
 echo Tellor contract deployed to "$TELLOR"
 
 # Deploy staking contract
 echo Deploying staking contract...
-STAKING=`forge create --rpc-url http://localhost:9921 \
-  --constructor-args $xcTRB "$TELLOR" \
-  --private-key $PRIVATE_KEY --legacy src/Staking.sol:Staking | grep "^Deployed to: " | tail -c 43 || exit`
+STAKING=`forge create --rpc-url http://localhost:9921 --constructor-args $xcTRB "$TELLOR" --private-key $PRIVATE_KEY --legacy src/Staking.sol:Staking | grep "^Deployed to: " | tail -c 43 || exit`
 echo Staking contract deployed to "$STAKING"
 
 # Set staking contract address on tellor contract

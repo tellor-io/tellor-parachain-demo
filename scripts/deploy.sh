@@ -14,9 +14,14 @@ echo Tellor contract deployed to "$TELLOR"
 
 # Deploy staking contract
 echo Deploying staking contract...
-forge create --rpc-url http://localhost:9921 \
+STAKING=`forge create --rpc-url http://localhost:9921 \
   --constructor-args $xcTRB "$TELLOR" \
-  --private-key $PRIVATE_KEY --legacy src/Staking.sol:Staking || exit
+  --private-key $PRIVATE_KEY --legacy src/Staking.sol:Staking | grep "^Deployed to: " | tail -c 43 || exit`
+echo Staking contract deployed to "$STAKING"
+
+# Set staking contract address on tellor contract
+echo Registering staking contract with Tellor contract...
+cast send --private-key $PRIVATE_KEY --rpc-url http://localhost:9921/ --legacy "$TELLOR" "setStaking(address)" "$STAKING" &> /dev/null || exit
 
 # Deploy governance contract
 echo Deploying governance contract...

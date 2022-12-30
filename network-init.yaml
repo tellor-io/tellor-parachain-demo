@@ -20,7 +20,7 @@ settings:
       evm_parachain:
         signer: &evmp_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133"
         derivative_accounts:
-          alice_ocp: &evmp_aocpda "0x9cb53b8311e1061de071fb297491534e3b374c88"
+          tellor_ocp: &evmp_tocpda "0x9cb53b8311e1061de071fb297491534e3b374c88"
       oracle_consumer_parachain:
         signer: &ocp_signer //Alice
         tellor_pallet_account: &ocp_tellor_account 5EYCAe5ijiYfyFR5Zp1cdckhKCKaUyo9KQsTcU1NR9u2mwTk
@@ -122,7 +122,7 @@ tests:
                 pallet: balances
                 call: transfer
                 args: [
-                  *evmp_aocpda,
+                  *evmp_tocpda,
                   "1000000000000000000"
                 ]
       - name: Initialise Oracle Consumer parachain

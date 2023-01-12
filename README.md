@@ -44,7 +44,7 @@ An example of a multilocation:
 ```
 
 **Note:** 
-- This requires the `Ethereum-XCM` pallet, which is currently only available on Moonbase Alpha and does not offer 
+- This requires the `Ethereum-XCM` pallet, which is currently only available on Moonbase Alpha and does not yet offer 
 as many options as the remote execution section above.
 - This will require that the corresponding multilocation derivative account of the `tellor` pallet account on Moonbeam is funded to pay for ongoing Xcm/Transact fees.
 
@@ -70,6 +70,8 @@ Launch a local network (`rococo-local`, `statemine-local`, `moonbase-local` and 
 ``` 
 **NOTE:** this currently requires a custom build of the `parachains-integration-tests` tool which adds support for Ethereum signing required by Moonbeam. 
 See https://github.com/paritytech/parachains-integration-tests/pull/85 for more details. The custom build can be installed globally by cloning the branch used for the PR and then using `yarn global add file:$PWD` to install.
+
+The launch process should conclude with a summary of the various network nodes, along with hyperlinks to launch network explorers for monitoring and interacting with the chains.
 
 ### Deploy Contracts & Initialise Chain State
 In a new terminal shell, use the `deploy` script to deploy the Tellor contracts to Moonbeam as well as perform required chainstate initialisation:
@@ -97,4 +99,8 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
 ```
 
 ### Pallet Usage
-todo
+A new data dispute can be started from the network explorer of the oracle consumer chain by clicking **Developer**, **Extrinsics**,
+selecting the `tellor` pallet from the drop-down, accepting the default extrinsic of `beginDispute()` and then clicking **Submit Transaction** and finally **Sign and Submit**.
+
+You can then return to **Network**, **Explorer** to monitor the events to confirm that the XCM message was sent. 
+A corresponding `xcmpQueue.Success` and `ethereum.Executed` event should appear within the events section of the network explorer of the destination parachain.

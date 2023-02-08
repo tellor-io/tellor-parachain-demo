@@ -1,7 +1,7 @@
 [submodule "polkadot"]
 	path = polkadot
 	url = https://github.com/paritytech/polkadot
-	branch = release-v0.9.32
+	branch = release-v0.9.37
 [submodule "moonbeam"]
 	path = moonbeam
 	url = https://github.com/PureStake/moonbeam
@@ -15,4 +15,4 @@
 [submodule "cumulus"]
 	path = cumulus
 	url = https://github.com/paritytech/cumulus
-	branch = polkadot-v0.9.32
+	branch = polkadot-v0.9.37

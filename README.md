@@ -98,6 +98,14 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
   "depositParachainStake(uint32,bytes,uint256)" 3000 0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 100
 ```
 
+#### Remove Value
+The following command requests removal (as contract owner) of a value for a particular parachain via the governance contract, which should then instruct the corresponding oracle consumer parachain to remove the value:
+```
+cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 \
+  --rpc-url http://localhost:9921/ --legacy 0x3ed62137c5db927cb137c26455969116bf0c23cb \
+  "removeParachainValue(uint32,bytes32,uint256)" 3000 0xef9a7ce42989c9c51fa8def09ad818ca42a49b161276ab09e60c71e740ff7f9b 12345
+```
+
 ### Pallet Usage
 A new data dispute can be started from the network explorer of the oracle consumer chain by clicking **Developer**, **Extrinsics**,
 selecting the `tellor` pallet from the drop-down, accepting the default extrinsic of `beginDispute()` and then clicking **Submit Transaction** and finally **Sign and Submit**.

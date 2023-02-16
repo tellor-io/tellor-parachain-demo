@@ -12,7 +12,6 @@ cd ..
 
 echo Building Moonbeam...
 cd moonbeam || exit
-git checkout runtime-2000
 cargo build --release
 cd ..
 

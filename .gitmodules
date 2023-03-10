@@ -15,4 +15,4 @@
 	branch = polkadot-v0.9.37
 [submodule "tellor-contracts"]
 	path = tellor-contracts
-	url = https://github.com/tellor-io/parity-tellor-contracts
+	url = https://github.com/evilrobotindustries/parity-tellor-contracts

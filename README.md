@@ -82,12 +82,20 @@ In a new terminal shell, use the `deploy` script to deploy the Tellor contracts 
 ### Contract Usage
 You can then call the contracts using Foundry's `cast`, using the development addresses listed at https://github.com/PureStake/moonbeam#prefunded-development-addresses.
 
+#### Approve Token
+The following command approves the transfer of 100 TRB for the staking contract (as Baltathar/Bob):
+```
+cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
+  --rpc-url http://localhost:9921/ --legacy 0xFFFFFFFFC8BE577A279484431B9444687EC3D2AE \
+  "approve(address,uint256)" 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 100000000000000
+```
+
 #### Deposit Stake
 The following command deposits a new stake of 100 TRB into the staking contract for a particular parachain (as Baltathar/Bob), which should then report the stake to the corresponding oracle consumer parachain so that the reporter can begin reporting:
 ```
 cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
   --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
-  "depositParachainStake(uint32,bytes,uint256)" 3000 0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 100000000000000000000
+  "depositParachainStake(uint32,bytes,uint256)" 3000 0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 100000000000000
 ```
 
 #### Submit Value

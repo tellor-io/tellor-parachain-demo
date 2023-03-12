@@ -200,7 +200,7 @@ tests:
                   }, # fees
                   Unlimited, # weight limit
                   5000000000, # require weight at most
-                  100000 # gas limit
+                  120000 # gas limit
                 ]
       - name: Fund oracle reporter via reserve transfer of TRB to xcTRB
         actions:

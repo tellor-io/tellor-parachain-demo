@@ -79,8 +79,8 @@ In a new terminal shell, use the `deploy` script to deploy the Tellor contracts 
 ./scripts/deploy.sh
 ```
 
-### Contract Usage
-You can then call the contracts using Foundry's `cast`, using the development addresses listed at https://github.com/PureStake/moonbeam#prefunded-development-addresses.
+### Usage
+You can then call the contracts using Foundry's `cast`, using the development addresses listed at https://github.com/PureStake/moonbeam#prefunded-development-addresses or submit extrinsics on the consumer parachain at https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/explorer.
 
 #### Approve Token
 The following command approves the transfer of 100 TRB for the staking contract (as Baltathar/Bob):
@@ -122,13 +122,16 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
   "requestParachainStakeWithdraw(uint32,uint256)" 3000 100000000000000
 ```
 
-#### Remove Value
-The following command requests removal (as contract owner) of a value for a particular parachain via the governance contract, which should then instruct the corresponding oracle consumer parachain to remove the value:
+#### Begin Dispute
+A submitted value can now be disputed on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-cast send --private-key 0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133 \
-  --rpc-url http://localhost:9921/ --legacy 0x3ed62137c5db927cb137c26455969116bf0c23cb \
-  "removeParachainValue(uint32,bytes32,uint256)" 3000 0xef9a7ce42989c9c51fa8def09ad818ca42a49b161276ab09e60c71e740ff7f9b 12345
+0x28081c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac80000000000000000
 ```
+
+**Note:** You will need to determine the timestamp for a previously submitted value and then enter it before submitting the call.
+
+Click **Submission**, ensure that the selected account is **Bob** (as the only reporter) and then click **Submit Transaction** and then **Sign and Submit**.
+
 
 ### Pallet Usage
 A new data dispute can be started from the network explorer of the oracle consumer chain by clicking **Developer**, **Extrinsics**,

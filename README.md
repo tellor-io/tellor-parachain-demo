@@ -98,13 +98,29 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
   "depositParachainStake(uint32,bytes,uint256)" 3000 0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 100000000000000
 ```
 
+#### Create Tip
+A tip can be created on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
+```
+0x28051c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac80010a5d4e800000000000000000000001468656c6c6f
+```
+
+Click **Submission**, ensure that the selected account is **Ferdie** and then click **Submit Transaction** and then **Sign and Submit**.
+
 #### Submit Value
 A value can now be submitted to the oracle on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x2807fd10fd359de12f7fed33a9f21e2808d4f6bc1f0b608d165aeea69c1c97502fe58081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f8500000000000000000000000000000000809f79ce821a7b27b91ae11ce35edaadef08d24a701aa9129303d32ab68d309dbc
+0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac88081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000000000000000000000000000001468656c6c6f
 ```
 
 Click **Submission**, ensure that the selected account is **Bob** (as stake deposited above) and then click **Submit Transaction** and then **Sign and Submit**.
+
+#### Request Stake Withdraw
+The following command deposits a new stake of 100 TRB into the staking contract for a particular parachain (as Baltathar/Bob), which should then report the stake to the corresponding oracle consumer parachain so that the reporter can begin reporting:
+```
+cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
+  --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
+  "requestParachainStakeWithdraw(uint32,uint256)" 3000 100000000000000
+```
 
 #### Remove Value
 The following command requests removal (as contract owner) of a value for a particular parachain via the governance contract, which should then instruct the corresponding oracle consumer parachain to remove the value:

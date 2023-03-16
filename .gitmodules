@@ -16,4 +16,3 @@
 [submodule "tellor-contracts"]
 	path = tellor-contracts
 	url = https://github.com/evilrobotindustries/parity-tellor-contracts
-	branch = refactor/simplify-api

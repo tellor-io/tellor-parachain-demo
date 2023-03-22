@@ -2,6 +2,8 @@
 A high-level proof-of-concept to assess XCM message sending between Tellor staking/governance smart contracts hosted on an 
 EVM-enabled parachain like Moonbeam, and a `tellor` oracle consumer pallet hosted on some other parachain.
 
+This code is cloned from [here](https://github.com/evilrobot-01/tellor).
+
 ## Overview
 The following sections summarise the options available when sending XCM messages from each direction (smart contracts <> pallet).
 

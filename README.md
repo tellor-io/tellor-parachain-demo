@@ -5,6 +5,10 @@ EVM smart contract parachain like Moonbeam, and a `tellor` pallet hosted on an o
 This code is cloned from [here](https://github.com/evilrobot-01/tellor).
 
 ## Components
+The following diagram provides an overview of the demo components.
+
+![components.svg](components.svg)
+
 The following submodules are used:
 - [cumulus](./cumulus): asset reserve
 - [moonbeam](./moonbeam): `moonbase-local` more specifically

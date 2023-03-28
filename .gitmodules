@@ -8,7 +8,6 @@
 [submodule "substrate-parachain-node"]
 	path = substrate-parachain-node
 	url = https://github.com/tellor-io/substrate-parachain-node
-	branch = tellor
 [submodule "cumulus"]
 	path = cumulus
 	url = https://github.com/paritytech/cumulus

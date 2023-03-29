@@ -1,56 +1,22 @@
 # Tellor
 A high-level proof-of-concept to assess XCM message sending between Tellor staking/governance smart contracts hosted on an 
-EVM-enabled parachain like Moonbeam, and a `tellor` oracle consumer pallet hosted on some other parachain.
+EVM smart contract parachain like Moonbeam, and a `tellor` pallet hosted on an oracle consumer parachain.
 
 This code is cloned from [here](https://github.com/evilrobot-01/tellor).
 
-## Overview
-The following sections summarise the options available when sending XCM messages from each direction (smart contracts <> pallet).
+## Components
+The following diagram provides an overview of the demo components.
 
-### Remote Execution
-As described at https://docs.moonbeam.network/builders/xcm/xcm-transactor, remote execution via the `XCM-Transactor` 
-pallet allows smart contracts to send XCM messages via Solidity precompiles (which effectively wrap the pallet extrinsics).
+![components.svg](components.svg)
 
-The following options for remote execution are available:
-- `transactThroughDerivative`: transact through an address derived from the source chain's sovereign account in the destination chain, using fees based on an asset (`CurrencyId`) registered with the local `asset_manager` pallet
-  - Transactions are dispatched from a derivative account of the sovereign account on the destination chain
-  - Requires pre-registration by `DerivativeAddressRegistrationOrigin` (Root), which maps an 'owner' address on the source chain to a derivative 'index' (or key), which in turn maps to a sovereign derivative account of the parachain sovereign account on destination chain
-  - Fees may be set as `SelfReserve`, `ForeignAsset` or `LocalAssetReserve`, where caller must hold tokens _locally_ of the type specified
-  - Deducts and burns amount of fees for remote execution from caller _before_ sending
-  - Resulting XCM message includes instruction to withdraw corresponding execution fees from parachain sovereign account on destination chain for execution payment
-  - requires `pallet-utility` and paid XCM message execution (`WithdrawAsset`,`BuyExecution`,`Transact`) to be allowed on the destination chain
-  - Requires Moonbeam to have native token of oracle consumer parachain registered locally and tokens bridged across to pay for fees
-- `transactThroughDerivativeMultilocation`: as above, but using fees based on a multilocation rather than `CurrencyId`
-- `transactThroughSignedMultilocation`: transact through XCM via signed origins, using fees based on a multilocation
-  - Transact through an account derived from the multilocation representing the signed user making the call 
-  - `DescendOrigin` is the first instruction of resulting XCM message, ensuring fee payment and dispatch from some derivative account on the destination chain
-  - No token is burnt before sending the message. The caller must ensure the destination is able to understand the `DescendOrigin` message, and create a unique account from which to dispatch the call
-  - No pre-registration required, but assumption that derivative account on remote chain has sufficient balance to pay for execution
-  - Requires paid XCM message execution (`DescendOrigin`,`WithdrawAsset`,`BuyExecution`,`Transact`) to be allowed on the destination chain
-  - Requires the destination chain to derivate a new corresponding account
-- `transactThroughSigned`: as above, but using fee based on an erc20 address (e.g. precompile address of XC-20 asset, which is a ERC-20 wrapper over a Substrate asset)
-
-`transactThroughSignedMultilocation` was selected to start as it did not require the bridging of remote assets and allowed 
-an interior multilocation, denoting the deployed smart contract address on the source parachain, to simply be converted to 
-the account of the `tellor` pallet on the oracle consumer parachain (via `xcm_config`). The `tellor` pallet is then funded 
-with native tokens for fee payment. This implementation was simply to get calls working and is not assumed to be secure.
-
-### Remote EVM Calls
-Based on https://docs.moonbeam.network/builders/xcm/remote-evm-calls, remote evm calls are dispatched from a keyless 
-derivative account which is derivated from a hash of the source multilocation (example below, see [calculate-multilocation-derivative](https://docs.moonbeam.network/builders/xcm/remote-evm-calls/#calculate-multilocation-derivative) for more info). This derivative account pays for fees and is set as
-the dispatcher of the call.
-
-An example of a multilocation:
-```
-{"parents":1,"interior":{"x1":{"accountId32":{"network":{"named":"0x57657374656e64"},"id":"0x78914a4d7a946a0e4ed641f336b498736336e05096e342c799cc33c0f868d62f"}}}}
-```
-
-**Note:** 
-- This requires the `Ethereum-XCM` pallet, which is currently only available on Moonbase Alpha and does not yet offer 
-as many options as the remote execution section above.
-- This will require that the corresponding multilocation derivative account of the `tellor` pallet account on Moonbeam is funded to pay for ongoing Xcm/Transact fees.
-
----
+The following submodules are used:
+- [cumulus](./cumulus): asset reserve
+- [moonbeam](./moonbeam): `moonbase-local` more specifically
+- [polkadot](./polkadot): rococo relay chain
+- [substrate-parachain-node](./substrate-parachain-node): parachain template acting as an oracle consumer chain via the following pallets:
+  - [tellor](https://github.com/tellor-io/tellor-pallet): allows reporters to submit values in return for rewards, once staked via the staking contract
+  - [using-tellor](https://github.com/tellor-io/using-tellor-pallet): sample showing access to oracle data from the `tellor` pallet via the `UsingTellor` trait
+- [tellor-contracts](./tellor-contracts): parachain registry, staking and governance contracts
 
 ## Setup
 
@@ -58,7 +24,8 @@ as many options as the remote execution section above.
 - Install required packages and Rust as per https://docs.substrate.io/install/
 - Install Foundry as per https://getfoundry.sh/
 - Install `yarn`
-- Clone this repository, making sure to initialise the submodules: `git clone --recursive https://github.com/evilrobot-01/tellor`
+- Install `parachains-integration-tests` from [here](https://github.com/paritytech/parachains-integration-tests/tree/frank/additional-keypair-types) (see https://github.com/paritytech/parachains-integration-tests/pull/85 and below for more details)
+- Clone this repository, making sure to initialise the submodules: `git clone --recursive https://github.com/tellor-io/tellor-parachain-demo`
 
 ### Build
 Build the `polkadot` (relay chain), `polkadot-parachain` (asset reserve), `moonbeam` and `parachain-template-node` (oracle consumer parachain) binaries using the `build` script:
@@ -82,7 +49,7 @@ In a new terminal shell, use the `deploy` script to deploy the Tellor contracts 
 ```
 
 ### Usage
-You can then call the contracts using Foundry's `cast`, using the development addresses listed at https://github.com/PureStake/moonbeam#prefunded-development-addresses or submit extrinsics on the consumer parachain at https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/explorer.
+You can then call the contracts using Foundry's `cast` using the development addresses listed at https://github.com/PureStake/moonbeam#prefunded-development-addresses or submit extrinsics on the consumer parachain at https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/explorer.
 
 #### Approve Token
 The following command approves the transfer of 100 TRB for the staking contract (as Baltathar/Bob):
@@ -111,7 +78,7 @@ Click **Submission**, ensure that the selected account is **Ferdie** and then cl
 #### Submit Value
 A value can now be submitted to the oracle on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac88081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000000000000000000000000000001468656c6c6f
+0x28061c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac88081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000000000000000000000000000001468656c6c6f
 ```
 
 Click **Submission**, ensure that the selected account is **Bob** (as stake deposited above) and then click **Submit Transaction** and then **Sign and Submit**.
@@ -127,17 +94,60 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
 #### Begin Dispute
 A submitted value can now be disputed on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28081c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac80000000000000000
+0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac80000000000000000
 ```
 
 **Note:** You will need to determine the timestamp for a previously submitted value and then enter it before submitting the call.
 
 Click **Submission**, ensure that the selected account is **Bob** (as the only reporter) and then click **Submit Transaction** and then **Sign and Submit**.
 
-
-### Pallet Usage
-A new data dispute can be started from the network explorer of the oracle consumer chain by clicking **Developer**, **Extrinsics**,
-selecting the `tellor` pallet from the drop-down, accepting the default extrinsic of `beginDispute()` and then clicking **Submit Transaction** and finally **Sign and Submit**.
-
-You can then return to **Network**, **Explorer** to monitor the events to confirm that the XCM message was sent. 
+You can then return to **Network**, **Explorer** to monitor the events to confirm that the XCM message was sent.
 A corresponding `xcmpQueue.Success` and `ethereum.Executed` event should appear within the events section of the network explorer of the destination parachain.
+
+<!--
+## Overview
+The following sections summarise the options available when sending XCM messages from each direction (smart contracts <> pallet).
+
+### Remote Execution
+As described at https://docs.moonbeam.network/builders/xcm/xcm-transactor, remote execution via the `XCM-Transactor`
+pallet allows smart contracts to send XCM messages via Solidity precompiles (which effectively wrap the pallet extrinsics).
+
+The following options for remote execution are available:
+- `transactThroughDerivative`: transact through an address derived from the source chain's sovereign account in the destination chain, using fees based on an asset (`CurrencyId`) registered with the local `asset_manager` pallet
+  - Transactions are dispatched from a derivative account of the sovereign account on the destination chain
+  - Requires pre-registration by `DerivativeAddressRegistrationOrigin` (Root), which maps an 'owner' address on the source chain to a derivative 'index' (or key), which in turn maps to a sovereign derivative account of the parachain sovereign account on destination chain
+  - Fees may be set as `SelfReserve`, `ForeignAsset` or `LocalAssetReserve`, where caller must hold tokens _locally_ of the type specified
+  - Deducts and burns amount of fees for remote execution from caller _before_ sending
+  - Resulting XCM message includes instruction to withdraw corresponding execution fees from parachain sovereign account on destination chain for execution payment
+  - requires `pallet-utility` and paid XCM message execution (`WithdrawAsset`,`BuyExecution`,`Transact`) to be allowed on the destination chain
+  - Requires Moonbeam to have native token of oracle consumer parachain registered locally and tokens bridged across to pay for fees
+- `transactThroughDerivativeMultilocation`: as above, but using fees based on a multilocation rather than `CurrencyId`
+- `transactThroughSignedMultilocation`: transact through XCM via signed origins, using fees based on a multilocation
+  - Transact through an account derived from the multilocation representing the signed user making the call
+  - `DescendOrigin` is the first instruction of resulting XCM message, ensuring fee payment and dispatch from some derivative account on the destination chain
+  - No token is burnt before sending the message. The caller must ensure the destination is able to understand the `DescendOrigin` message, and create a unique account from which to dispatch the call
+  - No pre-registration required, but assumption that derivative account on remote chain has sufficient balance to pay for execution
+  - Requires paid XCM message execution (`DescendOrigin`,`WithdrawAsset`,`BuyExecution`,`Transact`) to be allowed on the destination chain
+  - Requires the destination chain to derivate a new corresponding account
+- `transactThroughSigned`: as above, but using fee based on an erc20 address (e.g. precompile address of XC-20 asset, which is a ERC-20 wrapper over a Substrate asset)
+
+`transactThroughSignedMultilocation` was selected to start as it did not require the bridging of remote assets and allowed
+an interior multilocation, denoting the deployed smart contract address on the source parachain, to simply be converted to
+the account of the `tellor` pallet on the oracle consumer parachain (via `xcm_config`). The `tellor` pallet is then funded
+with native tokens for fee payment. This implementation was simply to get calls working and is not assumed to be secure.
+
+### Remote EVM Calls
+Based on https://docs.moonbeam.network/builders/xcm/remote-evm-calls, remote evm calls are dispatched from a keyless
+derivative account which is derivated from a hash of the source multilocation (example below, see [calculate-multilocation-derivative](https://docs.moonbeam.network/builders/xcm/remote-evm-calls/#calculate-multilocation-derivative) for more info). This derivative account pays for fees and is set as
+the dispatcher of the call.
+
+An example of a multilocation:
+```
+{"parents":1,"interior":{"x1":{"accountId32":{"network":{"named":"0x57657374656e64"},"id":"0x78914a4d7a946a0e4ed641f336b498736336e05096e342c799cc33c0f868d62f"}}}}
+```
+
+**Note:**
+- This requires the `Ethereum-XCM` pallet, which is currently only available on Moonbase Alpha and does not yet offer
+  as many options as the remote execution section above.
+- This will require that the corresponding multilocation derivative account of the `tellor` pallet account on Moonbeam is funded to pay for ongoing Xcm/Transact fees.
+-->

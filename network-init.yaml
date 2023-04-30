@@ -24,8 +24,8 @@ settings:
       oracle_consumer_parachain:
         signer: &ocp_signer //Alice
         tellor_pallet_account: &ocp_tellor_account 5EYCAe5ijiYfyFR5Zp1cdckhKCKaUyo9KQsTcU1NR9u2mwTk
-        stake_amount: &stake_amount 100000000000000 # 100 TRB
-        grant_amount: &grant_amount 105000000000000 # stake amount plus fees
+        stake_amount: &stake_amount "100000000000000000000" # 100 TRB
+        grant_amount: &grant_amount "105000000000000000000" # stake amount plus fees
     tokens:
       # Tellor Tribute token
       trb:
@@ -33,15 +33,15 @@ settings:
         symbol: &TRB TRB
         name: &TRB_name Tellor Tribute
         owner: &TRB_owner HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F # Alice's account on asset reserve parachain
-        min_balance: &TRB_min_balance 1000000000
-        decimals: &TRB_decimals 12
-        supply: &TRB_supply 1000000000000000 # 1,000
+        min_balance: &TRB_min_balance 1000000000000000
+        decimals: &TRB_decimals 18
+        supply: &TRB_supply "1000000000000000000000" # 1,000
       # Derivative of Tellor Tribute token
       xcTRB:
         symbol: &xcTRB xcTRB
         name: &xcTRB_name Tellor Tribute
         min_balance: &xcTRB_min_balance 1
-        decimals: &xcTRB_decimals 12
+        decimals: &xcTRB_decimals 18
       # Derivative of native Oracle Consumer parachain token
       xcOCP:
         symbol: &xcOCP xcOCP
@@ -141,7 +141,7 @@ tests:
                 keyPairType: ethereum
                 pallet: system
                 call: setStorage
-                # Note: hardcoded based on output of manual run of xcm-tools: yarn register-asset .. --revert-code true
+                # Note: hardcoded based on output of setStorage (decoded) from manual run of xcm-tools: yarn register-asset .. --revert-code true
                 args: [[["0x1da53b775b270400e7e61ed5cbc5a146ea70f53d5a3306ce02aaf97049cf181a8d25f78201571c23f3f5096d309394ecffffffffc8be577a279484431b9444687ec3d2ae","0x1460006000fd"]]]
               # Register native token of OCP as foreign asset
               - chain: *evmp
@@ -163,7 +163,7 @@ tests:
                   *xcOCP_min_balance, # minAmount
                   false, # isSufficient
                 ]
-              # Fund multi-location derivative account of TellorPallet@OracleConsumerParachain
+              # Fund multi-location derivative account of TellorPallet@OracleConsumerParachain (pallet -> contract xcm fees)
               - chain: *evmp
                 signer: *evmp_signer
                 keyPairType: ethereum
@@ -176,7 +176,7 @@ tests:
       - name: Initialise Oracle Consumer parachain
         actions:
           - extrinsics:
-              # Fund Tellor pallet for remote xcm fees
+              # Fund Tellor pallet for remote xcm fees (contract -> pallet xcm fees)
               - chain: *ocp
                 signer: *ocp_signer
                 pallet: balances
@@ -191,18 +191,8 @@ tests:
                 signer: *ocp_signer
                 pallet: tellor
                 call: register
-                args: [
-                  *stake_amount, # stake amount (TRB)
-                  {
-                    # Balances pallet on Moonbase
-                    id: { Concrete: { parents: 0, interior: { x1: { PalletInstance: 3 } } } },
-                    fun: { Fungible: 300000000000000 }
-                  }, # fees
-                  Unlimited, # weight limit
-                  5000000000, # require weight at most
-                  120000 # gas limit
-                ]
-      - name: Fund oracle reporter via reserve transfer of TRB to xcTRB
+                args: []
+      - name: Fund oracle reporter via reserve transfer of TRB (asset reserve) to xcTRB (EVM parachain)
         actions:
           - extrinsics:
               # Grant Balthazar stake amount

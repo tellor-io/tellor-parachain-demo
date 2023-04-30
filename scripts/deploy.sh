@@ -32,6 +32,11 @@ echo Initialising staking contract...
 cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9921/ --legacy "$STAKING" "init(address)" "$GOVERNANCE" || exit
 echo Staking contract initialised with governance address
 
+# Init governance contract
+echo Initialising governance contract...
+cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9921/ --legacy "$GOVERNANCE" "init(address)" "$STAKING" || exit
+echo Governance contract initialised with staking address
+
 cd ..
 
 # Initialise remaining network state

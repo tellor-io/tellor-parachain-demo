@@ -144,7 +144,7 @@ Click **Submission**, ensure that the selected account is **Ferdie** and then cl
 #### Submit Value
 Submits a value on the oracle consumer parachain to have a claim to the tip by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac88081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000000000000000000000000000001468656c6c6f
+0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8848081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000001468656c6c6f
 ```
 Click **Submission**, ensure that the selected account is **Bob** (as stake deposited above) and then click **Submit Transaction** and then **Sign and Submit**.
 

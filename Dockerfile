@@ -50,7 +50,8 @@ RUN mkdir -p moonbeam/target/release && \
 # todo: implement this
 
 # Launch network
-CMD ["parachains-integration-tests", "-m", "zombienet", "-c", "network-config.toml"]
+CMD parachains-integration-tests -m zombienet -c network-config.toml
+# CMD ["parachains-integration-tests", "-m", "zombienet", "-c", "network-config.toml"]
 
 # Deploy Contracts & Initialize State
 
@@ -60,5 +61,9 @@ CMD ["parachains-integration-tests", "-m", "zombienet", "-c", "network-config.to
 
 # Build image command:
 # docker build -t your-image-name .
+# or if on M1 Mac:
+# docker build --platform linux/arm64/v8 -t test-demo-1 .
+# img name: test-demo-1
 # Run container command:
 # docker run -it --rm --name your-container-name -p 9900:9900 -p 9910:9910 -p 9920:9920 -p 9930:9930 -p 9921:9921 your-image-name
+# container name: test-demo-1-container

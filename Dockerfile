@@ -1,14 +1,27 @@
-# Use the latest foundry image so Rust and Foundry are already installed
-FROM ghcr.io/foundry-rs/foundry
+# Use Node.js 16 based on Debian Bullseye
+FROM node:16-bullseye
 
 # Install required dependencies and tools
-RUN apk add --no-cache wget git build-base clang pkgconf openssl-dev yarn
+RUN apt-get update && \
+    apt-get install -y wget git build-essential clang pkg-config libssl-dev python3 curl
 
-# Clone and setup parachains-integration-tests
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# Set the PATH environment variable for Rust
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install Foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
+
+# Install Node.js dependencies
+RUN yarn global add node-gyp
+
+# Clone the parachains-integration-tests repository
 RUN git clone https://github.com/paritytech/parachains-integration-tests.git && \
     cd parachains-integration-tests && \
     git checkout frank/additional-keypair-types && \
-    yarn install && \
+    yarn install --force && \
     yarn global add file:$PWD
 
 # Expose WebSocket ports

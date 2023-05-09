@@ -60,17 +60,17 @@ RUN mkdir -p moonbeam/target/release && \
 
 # Download the oracle consumer parachain binary (substrate-parachain-node)
 # note: using locally-built release binary, since non availble on github
-# todo: implement this
+# todo: download binary from github
 
 # Launch network
-CMD parachains-integration-tests -m zombienet -c network-config.toml
-# CMD ["parachains-integration-tests", "-m", "zombienet", "-c", "network-config.toml"]
+RUN chmod +x scripts/launch.sh
+CMD ["/bin/bash", "scripts/launch.sh"]
 
 # Deploy Contracts & Initialize State
-
+# CMD ["/bin/bash", "scripts/deploy.sh"]
 
 # Run integration tests
-# todo: implement this
+# todo:
 
 # Build image command:
 # docker build -t your-image-name .

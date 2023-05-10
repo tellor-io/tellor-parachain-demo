@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PIT=parachains-integration-tests
+PIT=parachains-integration-tests#frank/additional-keypair-types
 PIT_PACKAGE=@parity/$PIT
 
 # Ensure yarn available

@@ -95,7 +95,7 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
 #### Begin Dispute
 A submitted value can now be disputed on the consumer parachain by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28091c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac8000000000000000000
+0x28095ca346e827c05578bf503b90ae22f5152de38ef55dc6f8d050fa4ae202a5f05a0000
 ```
 **Note:** You will need to determine the timestamp for a previously submitted value and then enter it before submitting the call. This can be obtained by querying the `Reports` storage item within the chain state of the pallet.
 Click **Submission**, ensure that the selected account is **Bob** (as the only reporter) and then click **Submit Transaction** and then **Sign and Submit**.
@@ -103,7 +103,7 @@ Click **Submission**, ensure that the selected account is **Bob** (as the only r
 #### Create Tip
 Creates a 'tip' on the oracle consumer parachain to incentivize data reporting by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28051c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac80010a5d4e800000000000000000000001468656c6c6f
+0x28055ca346e827c05578bf503b90ae22f5152de38ef55dc6f8d050fa4ae202a5f05a070010a5d4e83068656c6c6f2074656c6c6f72
 ```
 Click **Submission**, ensure that the selected account is **Ferdie** and then click **Submit Transaction** and then **Sign and Submit**.
 
@@ -119,7 +119,7 @@ The second `bytes` parameter is the corresponding address of the reporter on the
 #### Fund Feed
 Funds an existing feed with tokens by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x280300000000000000000000000000000000000000000000000000000000000000001c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac800000000000000000000000000000000
+0x28033f3b4bd8b76c7a59f462e05de60f8b5c0a8b84d8c39a747800227de12b8bec8e5ca346e827c05578bf503b90ae22f5152de38ef55dc6f8d050fa4ae202a5f05a00
 ```
 Click **Submission**, ensure that the selected account is **Ferdie** and then click **Submit Transaction** and then **Sign and Submit**.
 
@@ -136,7 +136,7 @@ cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6f
 Creates a data feed for recurring data reporting by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 
 ```
-0x28041c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac800e40b540200000000000000000000007cac426400000000580200000000000000000000000000000000000000000000000000000000000000001468656c6c6f0010a5d4e80000000000000000000000
+0x28045ca346e827c05578bf503b90ae22f5152de38ef55dc6f8d050fa4ae202a5f05a0700e876481703a0049c646109000000283068656c6c6f2074656c6c6f720b00a0724e1809
 ```
 Click **Submission**, ensure that the selected account is **Ferdie** and then click **Submit Transaction** and then **Sign and Submit**.
 
@@ -144,7 +144,7 @@ Click **Submission**, ensure that the selected account is **Ferdie** and then cl
 #### Submit Value
 Submits a value on the oracle consumer parachain to have a claim to the tip by connecting to https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:9930#/extrinsics/decode and then pasting in the following hex-encoded call:
 ```
-0x28071c8aff950685c2ed4bc3174f3472287b56d9517b9c948127319a09a7a36deac88081afeeaff0ed5cee7d05a21078399c2f56226b0cd5657062500cef4c4e736f85000000000000000000000000000000001468656c6c6f
+0x28075ca346e827c05578bf503b90ae22f5152de38ef55dc6f8d050fa4ae202a5f05a1068657921003068656c6c6f2074656c6c6f72
 ```
 Click **Submission**, ensure that the selected account is **Bob** (as stake deposited above) and then click **Submit Transaction** and then **Sign and Submit**.
 

@@ -1,0 +1,28 @@
+name: Dockerized Integration Tests
+
+on:
+  workflow_dispatch
+
+jobs:
+  build-run-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t e2e-test-img .
+      
+      - name: Remove existing container
+        run: |
+          docker rm -f e2e-test-container || true
+      
+      - name: Run integration tests
+        run: |
+          docker run -d --name e2e-test-container e2e-test-img
+          docker logs e2e-test-container
+          docker wait e2e-test-container
+
+      - name: Remove container
+        run: docker rm -f e2e-test-container

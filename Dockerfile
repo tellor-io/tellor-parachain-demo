@@ -30,10 +30,8 @@ RUN mkdir -p moonbeam/target/release && \
     wget -q -O moonbeam/target/release/moonbeam "https://github.com/PureStake/moonbeam/releases/download/v0.31.1/moonbeam" && \
     chmod +x moonbeam/target/release/moonbeam
 
-# Download the oracle consumer parachain binary (substrate-parachain-node)
-# note: using locally-built release binary, since non availble on github
-COPY ./substrate-parachain-node/target/release/parachain-template-node ./substrate-parachain-node/target/release/parachain-template-node
-# todo: download binary from github instead
+# Download the oracle consumer parachain binary (./substrate-parachain-node/target/release/parachain-template-node)
+# todo: download binary from github
 
 # Copy needed files to the image
 COPY ./scripts/launch.sh ./scripts/launch.sh

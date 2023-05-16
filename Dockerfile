@@ -1,9 +1,16 @@
-# Use Node.js 16 based on Debian Bullseye
-FROM node:16-bullseye
+# Use same image as ubuntu-latest for GitHub Actions
+FROM ubuntu:22.04
 
-# Install required dependencies and tools
+# Install wget and other dependencies
 RUN apt-get update && \
-    apt-get install -y wget git build-essential clang pkg-config libssl-dev python3 curl
+    apt-get install -y wget git build-essential clang pkg-config libssl-dev python3
+
+# Install Node.js
+RUN wget -qO- https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
+# Install Yarn
+RUN npm install -g yarn
 
 # Install Node.js dependencies
 RUN yarn global add node-gyp
@@ -30,8 +37,10 @@ RUN mkdir -p moonbeam/target/release && \
     wget -q -O moonbeam/target/release/moonbeam "https://github.com/PureStake/moonbeam/releases/download/v0.31.1/moonbeam" && \
     chmod +x moonbeam/target/release/moonbeam
 
-# Download the oracle consumer parachain binary (./substrate-parachain-node/target/release/parachain-template-node)
-# todo: download binary from github
+# Download the oracle consumer parachain binary
+RUN mkdir -p substrate-parachain-node/target/release && \
+    wget -q -O substrate-parachain-node/target/release/parachain-template-node "https://github.com/tellor-io/substrate-parachain-node/releases/download/release-9e95700d34f30c2ea4e51ee024690fd734ada891/parachain-template-node" && \
+    chmod +x substrate-parachain-node/target/release/parachain-template-node
 
 # Copy needed files to the image
 COPY ./scripts/launch.sh ./scripts/launch.sh

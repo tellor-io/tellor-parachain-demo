@@ -35,7 +35,7 @@ settings:
         owner: &TRB_owner HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F # Alice's account on asset reserve parachain
         min_balance: &TRB_min_balance 1000000000000000
         decimals: &TRB_decimals 18
-        supply: &TRB_supply "1000000000000000000000" # 1,000
+        supply: &TRB_supply "10000000000000000000000" # 10,000
       # Derivative of Tellor Tribute token
       xcTRB:
         symbol: &xcTRB xcTRB

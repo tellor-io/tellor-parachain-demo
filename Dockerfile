@@ -39,7 +39,7 @@ RUN mkdir -p moonbeam/target/release && \
 
 # Download the oracle consumer parachain binary
 RUN mkdir -p substrate-parachain-node/target/release && \
-    wget -q -O substrate-parachain-node/target/release/parachain-template-node "https://github.com/tellor-io/substrate-parachain-node/releases/download/release-9e95700d34f30c2ea4e51ee024690fd734ada891/parachain-template-node" && \
+    wget -q -O substrate-parachain-node/target/release/parachain-template-node "https://github.com/tellor-io/substrate-parachain-node/releases/download/release-de93110b29a3d73235d3c720c1ce6a705ccd787d/parachain-template-node" && \
     chmod +x substrate-parachain-node/target/release/parachain-template-node
 
 # Copy needed files to the image

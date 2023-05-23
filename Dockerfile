@@ -1,3 +1,7 @@
+# ************************************
+# See ./docs/docker-setup.md for usage
+# ************************************
+
 # Use same image as ubuntu-latest for GitHub Actions
 FROM ubuntu:22.04
 
@@ -46,12 +50,4 @@ RUN mkdir -p substrate-parachain-node/target/release && \
 COPY ./scripts/launch.sh ./scripts/launch.sh
 COPY ./scripts/deploy.sh ./scripts/deploy.sh
 COPY ./network-config.toml ./network-config.toml
-
-# Launch network
-CMD ["/bin/bash", "scripts/launch.sh"]
-
-# Deploy Contracts & Initialize State
-# CMD ["/bin/bash", "scripts/deploy.sh"]
-
-# Run integration tests
-# todo:
+COPY ./tellor-contracts ./tellor-contracts

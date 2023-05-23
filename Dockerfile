@@ -7,7 +7,16 @@ FROM ubuntu:22.04
 
 # Install wget and other dependencies
 RUN apt-get update && \
-    apt-get install -y wget git build-essential clang pkg-config libssl-dev python3
+    apt-get install -y wget curl git build-essential clang pkg-config libssl-dev python3
+
+# Install Foundry & Forge
+SHELL ["/bin/bash", "-c"]
+RUN curl -L https://foundry.paradigm.xyz | bash
+RUN source ~/.bashrc
+ENV PATH="~/.foundry/bin:${PATH}"
+RUN foundryup
+# Switch back to default shell
+SHELL ["/bin/sh", "-c"]
 
 # Install Node.js
 RUN wget -qO- https://deb.nodesource.com/setup_16.x | bash -

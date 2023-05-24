@@ -35,7 +35,7 @@ settings:
         owner: &TRB_owner HNZata7iMYWmk5RvZRTiAsSDhV8366zq2YGb3tLH5Upf74F # Alice's account on asset reserve parachain
         min_balance: &TRB_min_balance 1000000000000000
         decimals: &TRB_decimals 18
-        supply: &TRB_supply "1000000000000000000000" # 1,000
+        supply: &TRB_supply "10000000000000000000000" # 10,000
       # Derivative of Tellor Tribute token
       xcTRB:
         symbol: &xcTRB xcTRB
@@ -201,15 +201,15 @@ tests:
                 pallet: polkadotXcm
                 call: limitedReserveTransferAssets
                 args: [
-                  { v1: { parents: 1, interior: { x1: { parachain: *evmp_id } }}}, # destination
+                  { v3: { parents: 1, interior: { x1: { parachain: *evmp_id } }}}, # destination
                   { # beneficiary: Balthazar
-                    v1: {
+                    v3: {
                       parents: 0,
-                      interior: { x1: { AccountKey20: { network: Any, key: "0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0" } } }
+                      interior: { x1: { AccountKey20: { network: null, key: "0x3Cd0A705a2DC65e5b1E1205896BaA2be8A07c6e0" } } }
                     }
                   },
                   { # assets
-                    v1: [{
+                    v3: [{
                       id: {
                         Concrete: {
                           parents: 0,

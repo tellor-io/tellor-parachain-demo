@@ -77,7 +77,6 @@ O = Open to all, X = restricted by origin
 | [Vote](#vote)                             |  X   |  ←  | Users/reporters vote on OCP before being sent to governance, where either solution stakeholders vote                | 
 | Tally Votes                               |  →   |     | Tallies the votes (after 1 day) and notifies OCP                                                                    | 
 | Execute Vote                              |  →   |     | Executes the vote once tallied and notifies OCP, which processes dispute fees based on result                       | 
-| Deregister                                |  X   |  ←  | Deregisters the parachain from the solution contracts                                                               |
 
 ## Appendix
 
@@ -88,7 +87,7 @@ The following calls can be used to interact with the solution:
 Approves the transfer of 100 TRB for the staking contract (as Baltathar/Bob) on the EVM parachain:
 ```shell
 cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
-  --rpc-url http://localhost:9921/ --legacy 0xFFFFFFFFC8BE577A279484431B9444687EC3D2AE \
+  --rpc-url http://localhost:9920/ --legacy 0xFFFFFFFFC8BE577A279484431B9444687EC3D2AE \
   "approve(address,uint256)" 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 100000000000000000000
 ```
 
@@ -111,7 +110,7 @@ Click **Submission**, ensure that the selected account is **Ferdie** and then cl
 Deposits a new stake of 100 TRB into the staking contract (as Baltathar/Bob) for a particular oracle consumer parachain, which should then report the stake to the corresponding parachain so that the reporter can begin reporting:
 ```shell
 cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
-  --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
+  --rpc-url http://localhost:9920/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
   "depositParachainStake(uint32,bytes,uint256)" 3000 0x8eaf04151687736326c9fea17e25fc5287613693c912909cb226aa4794f26a48 100000000000000000000
 ```
 The second `bytes` parameter is the corresponding address of the reporter on the oracle consumer parachain.
@@ -128,7 +127,7 @@ Click **Submission**, ensure that the selected account is **Ferdie** and then cl
 Requests withdrawal of 50 TRB from the staking contract (as Baltathar/Bob) for a particular parachain, which should then report the stake withdrawal request to the corresponding parachain:
 ```shell
 cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
-  --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
+  --rpc-url http://localhost:9920/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
   "requestParachainStakeWithdraw(uint32,uint256)" 3000 50000000000000000000
 ```
 
@@ -161,6 +160,6 @@ Click **Submission**, select the corresponding user/report account and then clic
 Withdraws any stake amount (as Baltathar/Bob) which was previously requested for withdrawal for a particular parachain, which should then report the stake withdrawal to the corresponding parachain:
 ```shell
 cast send --private-key 0x8075991ce870b93a8870eca0c0f91913d12f47948ca0fd25b49c6fa7cdbeee8b \
-  --rpc-url http://localhost:9921/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
+  --rpc-url http://localhost:9920/ --legacy 0x970951a12F975E6762482ACA81E57D5A2A4e73F4 \
   "withdrawParachainStake(uint32)" 3000
 ```

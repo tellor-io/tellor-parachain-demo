@@ -20,7 +20,7 @@ settings:
       evm_parachain:
         signer: &evmp_signer "0x5fb92d6e98884f76de468fa3f6278f8807c48bebc13595d45af5bdc4da702133" # Alith
         derivative_accounts:
-          tellor_ocp: &evmp_tocpda "0x2aa1e5ffc61d158af854fa28b31fb87722e83b64"
+          tellor_ocp: &evmp_tocpda "0x26ab7997cf6d531fed12b2fa6bc3cf2248724195"
       oracle_consumer_parachain:
         signer: &ocp_signer //Alice
         tellor_pallet_account: &ocp_tellor_account 5EYCAe5ijiYfyFR5Zp1cdckhKCKaUyo9KQsTcU1NR9u2mwTk
@@ -191,7 +191,7 @@ tests:
                 signer: *ocp_signer
                 pallet: tellor
                 call: register
-                args: []
+                args: [ null ]
       - name: Fund oracle reporter via reserve transfer of TRB (asset reserve) to xcTRB (EVM parachain)
         actions:
           - extrinsics:

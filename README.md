@@ -2,8 +2,6 @@
 A proof-of-concept to assess XCM message sending between Tellor staking/governance smart contracts hosted on an 
 EVM smart contract parachain and a `tellor` pallet on an oracle consumer parachain (OCP).
 
-This code is cloned from [here](https://github.com/evilrobot-01/tellor).
-
 ## Components
 The following diagram provides an overview of the various components used in the demo.
 
@@ -23,9 +21,6 @@ The following submodules are used:
 ### Prerequisites:
 - Install required packages and Rust as per https://docs.substrate.io/install/
 - Install Foundry as per https://getfoundry.sh/
-- Install `yarn`
-- Install `parachains-integration-tests` from [here](https://github.com/paritytech/parachains-integration-tests/tree/frank/additional-keypair-types) 
-  - see https://github.com/paritytech/parachains-integration-tests/pull/85 and below for more details
 - Clone this repository, making sure to initialise the submodules: `git clone --recursive https://github.com/tellor-io/tellor-parachain-demo`
 
 ### Build
@@ -34,10 +29,6 @@ Build the `polkadot` (relay chain), `polkadot-parachain` (asset reserve), `moonb
   ./scripts/build.sh
   ```
 ### Launch Network
-**NOTE:** this currently requires a custom build of the `parachains-integration-tests` tool which adds support for Ethereum signing required by Moonbeam.
-See https://github.com/paritytech/parachains-integration-tests/pull/85 for more details. The custom build can be installed globally by cloning the branch used for the PR and then using `yarn global add file:$PWD` to install.
-This should be done before running the launch script until the PR is accepted.
-
 Launch a local network (`rococo-local`, `statemine-local`, `moonbase-local` and consumer parachain (with Tellor pallet) using the `launch` script:
 ```
 ./scripts/launch.sh

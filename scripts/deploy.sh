@@ -9,7 +9,7 @@ MULTISIG=0xf24FF3a9CF04c71Dbc94D0b566f7A27B94566cac # Alith
 echo Deploying Parachain Registry contract...
 cd tellor-contracts || exit
 # Deploy tellor parachain registry contract
-REGISTRY=`forge create --rpc-url http://localhost:9921 --private-key $PRIVATE_KEY --legacy src/ParachainRegistry.sol:ParachainRegistry | grep "^Deployed to: " | tail -c 43`
+REGISTRY=`forge create --rpc-url http://localhost:9920 --private-key $PRIVATE_KEY --legacy src/ParachainRegistry.sol:ParachainRegistry | grep "^Deployed to: " | tail -c 43`
 if [ -z "$REGISTRY" ]
 then
   echo Error: Contract could not be deployed.
@@ -19,22 +19,22 @@ echo Parachain Registry contract deployed to "$REGISTRY"
 
 # Deploy staking contract
 echo Deploying staking contract...
-STAKING=`forge create --rpc-url http://localhost:9921 --constructor-args "$REGISTRY" $xcTRB --private-key $PRIVATE_KEY --legacy src/ParachainStaking.sol:ParachainStaking | grep "^Deployed to: " | tail -c 43 || exit`
+STAKING=`forge create --rpc-url http://localhost:9920 --constructor-args "$REGISTRY" $xcTRB --private-key $PRIVATE_KEY --legacy src/ParachainStaking.sol:ParachainStaking | grep "^Deployed to: " | tail -c 43 || exit`
 echo Staking contract deployed to "$STAKING"
 
 # Deploy governance contract
 echo Deploying governance contract...
-GOVERNANCE=`forge create --rpc-url http://localhost:9921 --constructor-args "$REGISTRY" "$STAKING" "$MULTISIG" --private-key $PRIVATE_KEY --legacy src/ParachainGovernance.sol:ParachainGovernance | grep "^Deployed to: " | tail -c 43 || exit`
+GOVERNANCE=`forge create --rpc-url http://localhost:9920 --constructor-args "$REGISTRY" "$STAKING" "$MULTISIG" --private-key $PRIVATE_KEY --legacy src/ParachainGovernance.sol:ParachainGovernance | grep "^Deployed to: " | tail -c 43 || exit`
 echo Governance contract deployed to "$GOVERNANCE"
 
 # Init staking contract
 echo Initialising staking contract...
-cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9921/ --legacy "$STAKING" "init(address)" "$GOVERNANCE" || exit
+cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9920/ --legacy "$STAKING" "init(address)" "$GOVERNANCE" || exit
 echo Staking contract initialised with governance address
 
 # Init governance contract
 echo Initialising governance contract...
-cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9921/ --legacy "$GOVERNANCE" "init(address)" "$STAKING" || exit
+cast send --private-key "$PRIVATE_KEY" --rpc-url http://localhost:9920/ --legacy "$GOVERNANCE" "init(address)" "$STAKING" || exit
 echo Governance contract initialised with staking address
 
 cd ..

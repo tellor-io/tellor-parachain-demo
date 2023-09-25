@@ -24,7 +24,7 @@ cumulus_based = true
 chain = "statemine-local"
 
     [[parachains.collators]]
-    name = "statemine"
+    name = "asset-hub"
     command = "./cumulus/target/release/polkadot-parachain"
     ws_port = 9910
     args = ["--log=xcm=trace"]
@@ -40,7 +40,6 @@ chain = "moonbase-local"
     name = "alith"
     command = "./moonbeam/target/release/moonbeam"
     ws_port = 9920
-    rpc_port = 9921
     args = ["--log=xcm=trace"]
 
 # Consumer parachain, parachain-template-node with Tellor pallet

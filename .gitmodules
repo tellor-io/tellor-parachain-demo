@@ -1,17 +1,17 @@
 [submodule "polkadot"]
 	path = polkadot
 	url = https://github.com/paritytech/polkadot
-	branch = release-v0.9.41
+	branch = release-v0.9.43
 [submodule "moonbeam"]
 	path = moonbeam
-	url = https://github.com/PureStake/moonbeam
+	url = https://github.com/moonbeam-foundation/moonbeam
 [submodule "substrate-parachain-node"]
 	path = substrate-parachain-node
 	url = https://github.com/tellor-io/substrate-parachain-node
 [submodule "cumulus"]
 	path = cumulus
 	url = https://github.com/paritytech/cumulus
-	branch = polkadot-v0.9.40
+	branch = polkadot-v0.9.43
 [submodule "tellor-contracts"]
 	path = tellor-contracts
 	url = https://github.com/tellor-io/tellor-parachain-contracts

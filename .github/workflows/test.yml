@@ -1,0 +1,51 @@
+name: Run Integration Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    permissions:
+      checks: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set-Up
+        run: sudo apt update && sudo apt install -y git clang curl libssl-dev llvm libudev-dev cmake protobuf-compiler
+
+      - name: Free space
+        run: | 
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+
+      - name: Cache Build artefacts
+        uses: Swatinem/rust-cache@v2.7.0
+        with:
+          shared-key: test
+
+      - name: Install cargo-nextest
+        run: if ! which cargo-nextest &> /dev/null; then cargo install cargo-nextest; fi
+
+      - name: Configure CI
+        run: mkdir .config && echo -e "[profile.ci.junit]\npath = \"junit.xml\"" > .config/nextest.toml
+        working-directory: integration-tests
+
+      - name: Run tests
+        run: cargo nextest run --release --profile ci
+        working-directory: integration-tests
+
+      - name: Report test results
+        uses: dorny/test-reporter@v1
+        with:
+          name: integration-tests
+          path: target/nextest/ci/junit.xml
+          reporter: jest-junit
+          working-directory: 'integration-tests'

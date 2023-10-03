@@ -1,0 +1,1 @@
+Fork of https://github.com/paritytech/cumulus/tree/polkadot-v0.9.43/xcm/xcm-emulator, with fixes backported from 1.0 and https://github.com/paritytech/cumulus/pull/3037 applied.
